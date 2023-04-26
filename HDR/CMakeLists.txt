@@ -3,7 +3,7 @@
 #
 cmake_minimum_required(VERSION 3.23)
 project(HDR)
-set(CMAKE_CXX_STANDARD 20)
+set(CMAKE_CXX_STANDARD 14)
 
 include(FetchContent)
 FetchContent_Declare(
@@ -20,6 +20,9 @@ target_include_directories(HDR PRIVATE
         ${OPENCV_CONFIG_FILE_INCLUDE_DIR}
         ${OPENCV_INCLUDE_INSTALL_PATH}
         ${OPENCV_MODULE_opencv_core_LOCATION}/include
+        ${OPENCV_MODULE_opencv_videoio_LOCATION}/include
+        ${OPENCV_MODULE_opencv_imgcodecs_LOCATION}/include
         ${OPENCV_MODULE_opencv_highgui_LOCATION}/include
         )
-target_link_libraries(HDR ${OpenCV_LIBS} opencv_core opencv_highgui)
+
+target_link_libraries(HDR opencv_core opencv_videoio opencv_imgcodecs opencv_highgui)
