@@ -15,7 +15,8 @@ FetchContent_Declare(
 )
 FetchContent_MakeAvailable(opencv)
 
-add_executable(HDR src/HDR.cpp src/HDR.h)
+add_executable(HDR src/HDR.cpp src/HDR.h src/Tonemap.cpp src/Tonemap.h)
+
 target_include_directories(HDR PRIVATE
         ${OPENCV_CONFIG_FILE_INCLUDE_DIR}
         ${OPENCV_INCLUDE_INSTALL_PATH}

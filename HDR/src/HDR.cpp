@@ -2,6 +2,7 @@
 //
 
 #include "HDR.h"
+#include "Tonemap.h"
 
 using namespace std;
 using namespace cv;
@@ -23,6 +24,8 @@ struct PixelIndex
 	int col;
 	int channel;
 };
+
+
 
 int main()
 {
@@ -163,16 +166,23 @@ int main()
 		}
 	}
 
-	imwrite(topLevelDirectory + "hdr_out.png", HDR);
+	imwrite(topLevelDirectory + "hdr_out.png", HDR.clone());
 	cout << "Wrote recoved HDR image to png" << endl;
 
 	// write to OpenEXR
 	// works only in debug mode even though a warning is displayed
 	// launching in release mode results in a crash
 	// known OpenCV bug
-#define OPENCV_IO_ENABLE_OPENEXR 1
-	imwrite(topLevelDirectory + "hdr_out.exr", HDR);
-	cout << "Wrote recoved HDR image to exr" << endl;
+//#define OPENCV_IO_ENABLE_OPENEXR 1
+//	imwrite(topLevelDirectory + "hdr_out.exr", HDR);
+//	cout << "Wrote recoved HDR image to exr" << endl;
 
+	// tonemapping
+	Mat tonemapMat = Mat::zeros(HDR.size(), CV_8UC3);
+	tonemap(HDR, tonemapMat);
+
+	// write tonemapped image
+	imwrite(topLevelDirectory + "tonemapped.jpg", tonemapMat);
+	cout << "Wrote tonemapped image to png" << endl;
 	return EXIT_SUCCESS;
 }

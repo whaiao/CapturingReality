@@ -11,4 +11,3 @@
 #include <opencv2/imgcodecs.hpp>
 #include <opencv2/videoio.hpp>
 
-// TODO: Reference additional headers your program requires here.
