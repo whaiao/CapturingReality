@@ -56,7 +56,7 @@ int main()
 
 	Mat HDR = Mat::zeros(images[0].size(), CV_32FC3);
 
-	int maxIter = 20;
+	int maxEpochs = 5;
 	const int rows = images[0].rows;
 	const int cols = images[0].cols;
 	vector<vector<float>> estimatedIrradiance(rows, vector<float>(cols));
@@ -109,9 +109,9 @@ int main()
 		}
 	}
 
-	vector<float> responseFunction(nValues);
 	// estimate response function
-	for (int epoch = 0; epoch < maxIter; epoch++) 
+	vector<float> responseFunction(nValues);
+	for (int epoch = 0; epoch < maxEpochs; epoch++) 
 	{
 		for (int v = 0; v < nValues; v++)
 		{
@@ -158,13 +158,21 @@ int main()
 					int pixelValue = images[i].at<Vec3b>(r, c)(channel);
 					sum += robWeight(pixelValue) * (responseFunction[pixelValue] - log(exposure[i]));
 				}
-				HDR.at<Vec3f>(r, c)(channel) = exp(sum);
+				HDR.at<Vec3f>(r, c)(channel) = exp(sum) / 127.f;
 			}
 		}
 	}
 
 	imwrite(topLevelDirectory + "hdr_out.png", HDR);
+	cout << "Wrote recoved HDR image to png" << endl;
 
+	// write to OpenEXR
+	// works only in debug mode even though a warning is displayed
+	// launching in release mode results in a crash
+	// known OpenCV bug
+#define OPENCV_IO_ENABLE_OPENEXR 1
+	imwrite(topLevelDirectory + "hdr_out.exr", HDR);
+	cout << "Wrote recoved HDR image to exr" << endl;
 
 	return EXIT_SUCCESS;
 }
